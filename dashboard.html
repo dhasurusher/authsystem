@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthXBD Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: rgba(79, 70, 229, 0.1);
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #263449;
+            --bg-card-secondary: #172033;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: rgba(79, 70, 229, 0.2);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --card-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(79, 70, 229, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            min-height: 100vh;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+        }
+
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        /* Animated background elements */
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .bg-element:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        
+        .bg-element:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at center, var(--secondary) 0%, transparent 70%);
+            bottom: -50px;
+            left: 10%;
+            animation-delay: -5s;
+        }
+        
+        .bg-element:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at center, #818cf8 0%, transparent 70%);
+            top: 30%;
+            right: 15%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(15px, 15px) rotate(3deg); }
+            50% { transform: translate(0, 30px) rotate(0deg); }
+            75% { transform: translate(-15px, 15px) rotate(-3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 24px;
+            background: rgba(17, 24, 39, 0.7);
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-info, .application-item, .create-app-form, .card {
+            background: var(--bg-card);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            padding: 25px;
+        }
+        
+        .user-info:hover, .application-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            background: var(--bg-card-hover);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            letter-spacing: 0.5px;
+        }
+        
+        .logout-btn {
+            background: var(--danger) !important;
+            color: white !important;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+        
+        .logout-btn:hover {
+            background: var(--danger-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .user-info {
+            background: var(--bg-card-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 35px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-info h3 {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-info h3 svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--primary);
+        }
+        
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .info-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: var(--bg-card-hover);
+        }
+        
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            color: var(--text-primary);
+            font-size: 1.15rem;
+            font-weight: 600;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            word-break: break-all;
+            border: none;
+        }
+        
+        .applications {
+            margin-top: 35px;
+        }
+        
+        .applications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .applications-header h3 {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .applications-header h3 svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--primary);
+        }
+        
+        .create-app-btn {
+            background: var(--primary) !important;
+            color: white !important;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+        
+        .create-app-btn:hover {
+            background: var(--primary-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .application-item {
+            background: var(--bg-card-secondary);
+            border-radius: 16px;
+            padding: 25px;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-header {
+            margin-bottom: 20px;
+        }
+        
+        .app-header h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 15px 0;
+        }
+        
+        .app-meta {
+            margin-bottom: 20px;
+        }
+        
+        .app-meta-item {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .app-meta-item svg {
+            color: var(--primary);
+        }
+        
+        .app-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        
+        .manage-btn {
+            background: var(--primary) !important;
+            color: white !important;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex: 1;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+        
+        .manage-btn:hover {
+            background: var(--primary-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        .delete-btn {
+            background: var(--danger) !important;
+            color: white !important;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex: 1;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+        
+        .delete-btn:hover {
+            background: var(--danger-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .create-app-form {
+            background: var(--bg-card-secondary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            animation: slideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid #4f46e5;
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(203, 213, 225, 0.5);
+        }
+        
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+            margin-top: 5px;
+        }
+        
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .empty-state {
+            background: var(--bg-card-secondary);
+            border-radius: 16px;
+            padding: 50px 30px;
+            text-align: center;
+            margin: 30px 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .empty-state svg {
+            color: var(--primary);
+            opacity: 0.7;
+            margin-bottom: 20px;
+            transform: scale(1.2);
+        }
+        
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+        
+        .empty-state .create-app-btn {
+            margin: 0 auto;
+            display: inline-flex;
+        }
+        
+        .create-first-app-btn {
+            margin: 30px auto 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 30px;
+            color: var(--text-secondary);
+            gap: 20px;
+        }
+        
+        .loading svg {
+            color: var(--primary);
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Modal styling */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .custom-modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .custom-modal {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            max-width: 90%;
+            width: 480px;
+            position: relative;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: var(--primary);
+        }
+        
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .modal-message {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .btn-confirm {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+        
+        .btn-confirm:hover {
+            background: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-cancel {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+            
+            .header h2 {
+                font-size: 1.8rem;
+                justify-content: center;
+            }
+            
+            .applications-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+        }
+        
+            .applications-header h3 {
+                justify-content: center;
+        }
+
+            .user-info-grid {
+                grid-template-columns: 1fr;
+        }
+
+            .applications-grid {
+                grid-template-columns: 1fr;
+        }
+
+        .app-actions {
+            flex-direction: column;
+            }
+        }
+
+        /* Tab Navigation Styles */
+        .tab-navigation {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            overflow-x: auto;
+            gap: 8px;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 2px;
+            background: var(--primary);
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Guide Tab Styles */
+        .guide-section {
+            background: var(--bg-card-secondary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .guide-section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-section p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .code-block pre {
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.2s;
+        }
+        
+        .copy-button:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .guide-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary);
+        }
+        
+        .guide-card h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .guide-card svg {
+            color: var(--primary);
+        }
+        
+        .guide-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .guide-link {
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .guide-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal styling for create app form */
+        .create-app-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .create-app-modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .create-app-modal {
+            background: rgba(17, 24, 39, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            max-width: 90%;
+            width: 500px;
+            position: relative;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.3s ease;
+        }
+
+        .create-app-modal h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Toast Notification Styling */
+        .toast-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+        
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--primary);
+            animation: slideInRight 0.3s ease, fadeOut 0.5s ease 3.5s forwards;
+            transform-origin: bottom right;
+        }
+        
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.success {
+            border-left-color: var(--secondary);
+        }
+        
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        
+        .toast.success .toast-icon {
+            color: var(--secondary);
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+            color: var(--text-primary);
+        }
+        
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .toast-close:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        /* Custom context menu styling */
+        .custom-context-menu {
+            display: none;
+            position: absolute;
+            width: 200px;
+            background: var(--bg-card);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+        
+        .custom-context-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .custom-context-menu-item:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        
+        .custom-context-menu-separator {
+            height: 1px;
+            background: var(--border-color);
+            margin: 5px 0;
+        }
+
+        /* Custom Checkbox Styling */
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        .checkmark {
+            position: relative;
+            height: 20px;
+            width: 20px;
+            margin-right: 10px;
+            background-color: var(--bg-card-secondary);
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .custom-checkbox:hover .checkmark {
+            background-color: var(--bg-card-hover);
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(79, 70, 229, 0.3);
+        }
+        
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            width: 6px;
+            height: 11px;
+            border: solid var(--primary);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            top: 3px;
+        }
+        
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        
+        .custom-checkbox:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="animated-bg">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                AuthXBD Dashboard
+            </h2>
+            <button class="logout-btn" id="logoutBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </button>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-button" data-tab="guide">Guide</button>
+        </div>
+
+        <!-- Dashboard Tab Content -->
+        <div id="dashboard-tab" class="tab-content active">
+            <div class="user-info">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Account Information
+                </h3>
+                <div class="user-info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Username</div>
+                        <div class="info-value" id="username">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="email">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Role</div>
+                        <div class="info-value" id="role">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Owner ID</div>
+                        <div class="info-value" id="ownerId">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="applications">
+                <div class="applications-header">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        Your Applications
+                    </h3>
+                    <button class="create-app-btn" id="createAppBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Create New App
+                    </button>
+                </div>
+
+                <div id="createAppForm" class="create-app-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="appName" class="form-label">Application Name</label>
+                        <input type="text" id="appName" class="form-control" placeholder="Enter application name">
+                    </div>
+                    <button id="submitAppBtn" class="btn-submit">Create Application</button>
+                </div>
+
+                <div id="applicationsContainer">
+                    <div class="loading">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        <div>Loading your applications...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guide Tab Content -->
+        <div id="guide-tab" class="tab-content">
+            <div class="guide-section">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                    Getting Started
+                </h3>
+                <p>
+                    Welcome to AuthXBD! This guide will help you understand how to use our authentication system for your applications.
+                    Follow these steps to get started with integrating your application with our authentication service.
+                </p>
+            </div>
+
+                <div class="guide-section">
+                    <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
+                        <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
+                        </svg>
+                    Installation Commands
+                    </h3>
+                <p>Required packages for setup and integration:</p>
+                <div class="code-block">
+                    <button class="copy-button" onclick="copyToClipboard('vcpkg install curl')">Copy</button>
+                    <pre>vcpkg install curl</pre>
+                </div>
+                <div class="code-block">
+                    <button class="copy-button" onclick="copyToClipboard('vcpkg install minhook:x64-windows-static')">Copy</button>
+                    <pre>vcpkg install minhook:x64-windows-static</pre>
+                </div>
+                <div class="code-block">
+                    <button class="copy-button" onclick="copyToClipboard('vcpkg install glew:x64-windows-static')">Copy</button>
+                    <pre>vcpkg install glew:x64-windows-static</pre>
+                </div>
+                <div class="code-block">
+                    <button class="copy-button" onclick="copyToClipboard('vcpkg integrate install')">Copy</button>
+                    <pre>vcpkg integrate install</pre>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="guide-grid">
+                <div class="guide-card">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
+                        </svg>
+                        GitHub Resources
+                    </h4>
+                    <p>Access our GitHub repositories for examples and integration guides.</p>
+                    <a href="https://github.com/darkcryptlucky/Imgui-Auth-example/releases/tag/auth" class="guide-link" target="_blank">ImGui Auth Example</a>
+                    <a href="https://github.com/darkcryptlucky/C-Auth-Example/releases/tag/c%23" class="guide-link" target="_blank">C# Auth Example</a>
+                    </div>
+
+                <div class="guide-card">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        Support
+                    </h4>
+                    <p>Need help with integration? Contact our support team or join our community.</p>
+                    <a href="mailto:support@authxbd.com" class="guide-link">Email Support</a>
+                    <a href="https://discord.gg/7HmfrJBJEx" class="guide-link" target="_blank">Join Discord</a>
+                </div>
+
+                <div class="guide-card">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Tutorials
+                    </h4>
+                    <p>Watch our tutorial videos to learn how to integrate AuthXBD.</p>
+                    <a href="https://www.youtube.com/@Dark-VerseX" class="guide-link" target="_blank">YouTube Channel</a>
+                    <a href="https://authxbd.com/tutorials" class="guide-link" target="_blank">Written Tutorials</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Create Application Modal -->
+    <div class="create-app-modal-overlay" id="createAppModal">
+        <div class="create-app-modal">
+            <h3>Create New Application</h3>
+            <div class="form-group">
+                <label for="modalAppName" class="form-label">Application Name</label>
+                <input type="text" id="modalAppName" class="form-control" placeholder="Enter application name">
+        </div>
+            <button id="modalSubmitAppBtn" class="btn-submit">Create Application</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="custom-modal-overlay" id="deleteModal">
+        <div class="custom-modal">
+            <div class="modal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12" y2="17"></line>
+                </svg>
+            </div>
+            <h3 class="modal-title">Delete Application?</h3>
+            <p class="modal-message">Are you sure you want to delete this application? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-confirm" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom context menu -->
+    <div class="custom-context-menu" id="customContextMenu">
+        <div class="custom-context-menu-item" id="refresh">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg>
+            Refresh
+        </div>
+        <div class="custom-context-menu-item" id="back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Back
+        </div>
+        <div class="custom-context-menu-item" id="forward">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            Forward
+        </div>
+        <div class="custom-context-menu-separator"></div>
+        <div class="custom-context-menu-item" id="print">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5z"/>
+            </svg>
+            Print
+        </div>
+        <div class="custom-context-menu-item" id="save">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            Save As
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for token in URL (from Google OAuth)
+            const urlParams = new URLSearchParams(window.location.search);
+            const tokenFromUrl = urlParams.get('token');
+            
+            if (tokenFromUrl) {
+                // Store the token in sessionStorage and remove it from URL
+                sessionStorage.setItem('authToken', tokenFromUrl);
+                // Clean URL by removing the token parameter
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            // Get the token from sessionStorage
+            const token = sessionStorage.getItem('authToken');
+            
+            // If no token, redirect to login
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Setup tab navigation
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+            
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Setup event listeners
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('createAppBtn').addEventListener('click', toggleCreateAppForm);
+            document.getElementById('modalSubmitAppBtn').addEventListener('click', createApplication);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+            
+            // Load user data and applications
+            loadUserInfo();
+            loadApplications();
+        });
+        
+        // Function to copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    alert('Copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy text');
+                });
+        }
+
+        // Helper function to get API base URL
+        function getApiBaseUrl() {
+            return window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
+                ? 'http://localhost:5001/api'
+                : window.location.origin + '/api';
+        }
+
+        // Load user information
+        async function loadUserInfo() {
+            const token = sessionStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${getApiBaseUrl()}/auth/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    const user = data.data;
+                    
+                    // Update user information
+                    document.getElementById('username').textContent = user.username || 'N/A';
+                    document.getElementById('email').textContent = user.email || 'N/A';
+                    document.getElementById('role').textContent = user.role || 'User';
+                    document.getElementById('ownerId').textContent = user.ownerId || 'N/A';
+                } else {
+                    throw new Error(data.message || 'Failed to load user data');
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                showError('Failed to load user information. Please try logging in again.');
+            }
+        }
+
+        // Load applications
+        async function loadApplications() {
+            const token = sessionStorage.getItem('authToken');
+            const container = document.getElementById('applicationsContainer');
+            
+            try {
+                const response = await fetch(`${getApiBaseUrl()}/applications`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.data && data.data.length > 0) {
+                        // Create applications grid
+                        let html = '<div class="applications-grid">';
+                        
+                        data.data.forEach(app => {
+                            const appId = app.appId ? app.appId.substring(0, 8) + '...' : 'N/A';
+                            const createdDate = app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A';
+                            
+                            html += `
+                                <div class="application-item">
+                                    <div class="app-header">
+                                        <h4>${app.name || 'Unnamed App'}</h4>
+                                    </div>
+                                    <div class="app-meta">
+                                        <div class="app-meta-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                            </svg>
+                                            Created: ${createdDate}
+                                        </div>
+                                        <div class="app-meta-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"></path>
+                                            </svg>
+                                            ID: ${appId}
+                                        </div>
+                                    </div>
+                                    <div class="app-actions">
+                                        <button class="manage-btn" onclick="manageApplication('${app._id}', '${app.name}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Manage
+                                        </button>
+                                        <button class="delete-btn" onclick="confirmDeleteApplication('${app._id}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M3 6h18"></path>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                        container.innerHTML = html;
+                    } else {
+                        // No applications found
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                                <p>You don't have any applications yet</p>
+                                <button class="create-app-btn" onclick="toggleCreateAppForm()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                                    </svg>
+                                    Create your first application
+                                </button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to load applications');
+                }
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>Error loading applications. Please try again.</p>
+                        <button class="create-app-btn" onclick="loadApplications()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Toggle Create Application Form
+        function toggleCreateAppForm() {
+            const modal = document.getElementById('createAppModal');
+            modal.classList.add('active');
+            
+            // Focus on the input field
+            setTimeout(() => {
+                document.getElementById('modalAppName').focus();
+            }, 100);
+
+            // Add event listener to close modal when clicking outside
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeCreateAppModal();
+                }
+            });
+            
+            // Add escape key listener to close modal
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeCreateAppModal();
+                }
+            });
+        }
+        
+        // Add a close modal function
+        function closeCreateAppModal() {
+            const modal = document.getElementById('createAppModal');
+            modal.classList.remove('active');
+            document.getElementById('modalAppName').value = '';
+        }
+
+        // Update the createApplication function to use the modal input
+        async function createApplication() {
+            const appNameInput = document.getElementById('modalAppName');
+            const appName = appNameInput.value.trim();
+            
+            if (!appName) {
+                showError('Please enter an application name');
+                return;
+            }
+            
+            const token = sessionStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${getApiBaseUrl()}/applications`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                    body: JSON.stringify({ name: appName })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Clear form and close the modal
+                    appNameInput.value = '';
+                    closeCreateAppModal();
+                    
+                    // Show success notification
+                    showSuccess('Application created successfully!');
+                    
+                    // Reload applications list
+                    loadApplications();
+                } else {
+                    throw new Error(data.message || 'Failed to create application');
+                }
+            } catch (error) {
+                console.error('Error creating application:', error);
+                showError(error.message || 'Failed to create application');
+            }
+        }
+
+        // Show delete confirmation modal
+        function confirmDeleteApplication(appId) {
+            const modal = document.getElementById('deleteModal');
+            const confirmButton = document.getElementById('confirmDeleteBtn');
+            
+            // Set click handler for confirm button
+            confirmButton.onclick = function() {
+                deleteApplication(appId);
+            };
+            
+            // Show modal
+            modal.classList.add('active');
+            }
+            
+        // Close delete confirmation modal
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('active');
+            }
+        
+        // Delete an application
+        async function deleteApplication(appId) {
+            const token = sessionStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${getApiBaseUrl()}/applications/${appId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                });
+                
+                const data = await response.json();
+                
+                        if (data.success) {
+                    // Close modal and reload applications
+                    closeDeleteModal();
+                            loadApplications();
+                        } else {
+                    throw new Error(data.message || 'Failed to delete application');
+                        }
+            } catch (error) {
+                console.error('Error deleting application:', error);
+                showError(error.message || 'Failed to delete application');
+                closeDeleteModal();
+            }
+        }
+        
+        // Navigate to application management page
+        function manageApplication(appId, appName) {
+            // Use localStorage for app data but ensure the auth token is preserved in sessionStorage
+            localStorage.setItem('currentAppId', appId);
+            localStorage.setItem('currentAppName', appName);
+            
+            // Make sure the token is available before navigating
+            const token = sessionStorage.getItem('authToken');
+            if (!token) {
+                showError('Authentication token not found. Please log in again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            window.location.href = 'app-manage.html';
+        }
+        
+        // Logout function
+        function logout() {
+            // Clear sessionStorage
+            sessionStorage.removeItem('authToken');
+            
+            // Call logout endpoint to clear the HTTP-only cookie
+            fetch(`${getApiBaseUrl()}/auth/logout`)
+                .then(() => {
+                    window.location.href = 'login.html';
+                })
+                .catch(() => {
+                    // Even if the logout endpoint fails, redirect to login
+                    window.location.href = 'login.html';
+                });
+        }
+        
+        // Show error message
+        function showError(message) {
+            showToast(message, 'error');
+        }
+        
+        // Add success toast function
+        function showSuccess(message) {
+            showToast(message, 'success');
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            // Icon based on type
+            let iconSvg = '';
+            let title = '';
+            
+            if (type === 'error') {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+                title = 'Error';
+            } else if (type === 'success') {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+                title = 'Success';
+            } else {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                title = 'Information';
+            }
+            
+            // Create toast content
+            toast.innerHTML = `
+                <div class="toast-icon">${iconSvg}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            `;
+            
+            // Add close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.remove();
+            });
+            
+            // Add to container
+            container.appendChild(toast);
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+
+        // Disable default context menu and implement custom one
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            
+            const contextMenu = document.getElementById('customContextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.pageX}px`;
+            contextMenu.style.top = `${e.pageY}px`;
+            
+            // Adjust position if menu would go off screen
+            const menuRect = contextMenu.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            if (e.pageX + menuRect.width > windowWidth) {
+                contextMenu.style.left = `${windowWidth - menuRect.width - 10}px`;
+            }
+            
+            if (e.pageY + menuRect.height > windowHeight) {
+                contextMenu.style.top = `${windowHeight - menuRect.height - 10}px`;
+            }
+        });
+        
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', function() {
+            document.getElementById('customContextMenu').style.display = 'none';
+        });
+        
+        // Add functionality to context menu items
+        document.getElementById('refresh').addEventListener('click', function() {
+            location.reload();
+        });
+        
+        document.getElementById('back').addEventListener('click', function() {
+            history.back();
+        });
+        
+        document.getElementById('forward').addEventListener('click', function() {
+            history.forward();
+        });
+        
+        document.getElementById('print').addEventListener('click', function() {
+            window.print();
+        });
+        
+        document.getElementById('save').addEventListener('click', function() {
+            // This is limited in what it can do due to browser security restrictions
+            // but we'll keep it as a menu item for completeness
+            alert('Save functionality is limited by browser security.');
+        });
+        
+        // Additional security measures to prevent some inspection features
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (developer tools)
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67))
+            ) {
+                e.preventDefault();
+            }
+            
+            // Prevent Ctrl+U (view source)
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html> 

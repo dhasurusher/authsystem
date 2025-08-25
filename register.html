@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthXBD Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --background-color: #0f172a;
+            --card-background: rgba(30,41,59,0.95);
+            --text-color: #cbd5e1;
+            --heading-color: #f1f5f9;
+            --border-color: #334155;
+            --input-border: #475569;
+            --input-background: #1e293b;
+            --shadow-color: rgba(0,0,0,0.7);
+            --primary-color: #60a5fa;
+            --primary-hover: #93c5fd;
+            --success-background: #1e3a25;
+            --success-color: #34d399;
+            --error-background: #3a1e20;
+            --error-color: #f87171;
+            --google-bg: #334155;
+            --google-text: #e2e8f0;
+            --google-border: #475569;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #0f172a;
+            --card-background: #1e293b;
+            --text-color: #cbd5e1;
+            --heading-color: #f1f5f9;
+            --border-color: #334155;
+            --input-border: #475569;
+            --input-background: #334155;
+            --shadow-color: rgba(0,0,0,0.3);
+            --primary-color: #60a5fa;
+            --primary-hover: #93c5fd;
+            --success-background: #1e3a25;
+            --success-color: #75b798;
+            --error-background: #3a1e20;
+            --error-color: #dc8890;
+            --google-bg: #334155;
+            --google-text: #e2e8f0;
+            --google-border: #475569;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            min-height: 100vh;
+            width: 100vw;
+            background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%) !important;
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        body {
+            position: relative;
+            min-height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Add animated background elements */
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-element:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle at center, #a18cd1 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at center, #fbc2eb 0%, transparent 70%);
+            bottom: -50px;
+            left: 10%;
+            animation-delay: -5s;
+        }
+
+        .bg-element:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle at center, #60a5fa 0%, transparent 70%);
+            top: 30%;
+            right: 15%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(15px, 15px) rotate(3deg); }
+            50% { transform: translate(0, 30px) rotate(0deg); }
+            75% { transform: translate(-15px, 15px) rotate(-3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        #root, .wrapper, .container {
+            background: none !important;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo svg {
+            width: 65px;
+            height: 65px;
+            filter: drop-shadow(0 0 15px #a18cd1);
+            margin-bottom: 10px;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                filter: drop-shadow(0 0 10px #a18cd1);
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px #a18cd1);
+                transform: scale(1.05);
+            }
+            100% {
+                filter: drop-shadow(0 0 10px #a18cd1);
+                transform: scale(1);
+            }
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            background: rgba(30,41,59,0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+            width: 340px;
+            max-width: 90%;
+            padding: 28px 24px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 4px;
+            background: linear-gradient(90deg, #a18cd1, #fbc2eb, #a18cd1);
+            animation: borderLight 4s linear infinite;
+        }
+        
+        @keyframes borderLight {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(25%); }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Beautiful scrollbar for the container */
+        .container::-webkit-scrollbar {
+            width: 6px;
+            background: transparent;
+        }
+        
+        .container::-webkit-scrollbar-thumb {
+            background: rgba(161, 140, 209, 0.3);
+            border-radius: 6px;
+        }
+        
+        .container::-webkit-scrollbar-thumb:hover {
+            background: rgba(251, 194, 235, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #a1c4fd;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            padding-left: 35px;
+            box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            background-color: rgba(30,41,59,0.5);
+            color: #f1f5f9;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #a18cd1;
+            box-shadow: 0 0 0 3px rgba(161, 140, 209, 0.3);
+            background-color: rgba(30,41,59,0.8);
+        }
+        
+        .form-group .icon {
+            position: absolute;
+            left: 12px;
+            top: 34px;
+            color: #a1c4fd;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .form-group:focus-within .icon {
+            color: #fbc2eb;
+            opacity: 1;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(161, 140, 209, 0.5);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .login-link a {
+            color: #a1c4fd;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-link a:hover {
+            color: #fbc2eb;
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Validation styling */
+        .validation-hint {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+            transition: all 0.3s;
+        }
+        
+        .form-group:focus-within .validation-hint {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .is-valid {
+            border-color: rgba(16, 185, 129, 0.4) !important;
+        }
+        
+        .is-invalid {
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .password-strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        
+        .strength-weak {
+            width: 33%;
+            background: #ef4444;
+        }
+        
+        .strength-medium {
+            width: 66%;
+            background: #f59e0b;
+        }
+        
+        .strength-strong {
+            width: 100%;
+            background: #10b981;
+        }
+        
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .theme-switch-label {
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #60a5fa;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .icons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 5px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 4px;
+        }
+        
+        .icons span {
+            font-size: 12px;
+            color: white;
+        }
+        
+        /* Add a floating glassmorphism blob for extra wow */
+        .blob {
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(135deg, #232946 0%, #60a5fa 100%);
+            opacity: 0.18;
+            filter: blur(40px);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Custom Context Menu Styling */
+        .custom-context-menu {
+            display: none;
+            position: absolute;
+            width: 200px;
+            background: var(--bg-card);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .custom-context-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-context-menu-item:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .custom-context-menu-separator {
+            height: 1px;
+            background: var(--border-color);
+            margin: 5px 0;
+        }
+    </style>
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = sessionStorage.getItem('authToken');
+            if (token) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+            
+            // Set dark theme as default
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Set the toggle to match
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.checked = savedTheme === 'dark';
+            }
+
+            // Add event listener to register button
+            document.getElementById('register-button').addEventListener('click', register);
+
+            // Add password strength evaluation
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', checkPasswordStrength);
+            }
+
+            // Check password match
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+            }
+        });
+        
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const meter = document.querySelector('.password-strength-meter');
+            
+            // Remove all classes
+            meter.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+            
+            // Set strength based on password length and complexity
+            if (password.length === 0) {
+                meter.style.width = '0%';
+            } else if (password.length < 8) {
+                meter.classList.add('strength-weak');
+            } else if (password.length >= 8 && password.length < 12) {
+                meter.classList.add('strength-medium');
+            } else if (password.length >= 12) {
+                meter.classList.add('strength-strong');
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    document.getElementById('confirm-password').classList.add('is-valid');
+                    document.getElementById('confirm-password').classList.remove('is-invalid');
+                } else {
+                    document.getElementById('confirm-password').classList.add('is-invalid');
+                    document.getElementById('confirm-password').classList.remove('is-valid');
+                }
+            }
+        }
+
+        function register() {
+            // Get form values
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorElement = document.getElementById('register-error');
+            
+            // Clear previous errors
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            // Validate form
+            if (!name || !username || !email || !password || !confirmPassword) {
+                errorElement.textContent = 'Please fill in all fields';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Validate Gmail address
+            if (!email.endsWith('@gmail.com')) {
+                errorElement.textContent = 'Please use a valid Gmail address (example@gmail.com)';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 8) {
+                errorElement.textContent = 'Password must be at least 8 characters';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Get the API URL based on current environment
+            const apiUrl = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
+                ? 'http://localhost:5001/api/auth/register'
+                : window.location.origin + '/api/auth/register';
+            
+            // Submit registration request
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    username: username,
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    errorElement.textContent = data.message || 'Registration failed';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+                
+                // Store token and redirect directly to dashboard
+                if (data.data && data.data.token) {
+                sessionStorage.setItem('authToken', data.data.token);
+                    showNotification('success', 'Registration Successful', 'Your account has been created. Redirecting to dashboard...');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    // Fallback if token isn't returned
+                    showNotification('success', 'Registration Successful', 'Your account has been created. Redirecting to login...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                }
+            })
+            .catch(error => {
+                errorElement.textContent = 'Could not connect to the server: ' + error.message;
+                errorElement.style.display = 'block';
+            });
+        }
+        
+        // Notification system
+        function showNotification(type, title, message, duration = 5000) {
+            // Create notification container if it doesn't exist
+            let container = document.querySelector('.notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // Get the appropriate icon based on notification type
+            let iconSvg;
+            switch(type) {
+                case 'success':
+                    iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
+                    break;
+                case 'error':
+                    iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
+                    break;
+                case 'warning':
+                    iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>';
+                    break;
+                case 'info':
+                default:
+                    iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+            }
+            
+            // Build notification HTML
+            notification.innerHTML = `
+                <div class="notification-icon">${iconSvg}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <div class="notification-close" onclick="this.parentElement.remove()">×</div>
+                <div class="notification-progress"></div>
+            `;
+            
+            // Add to container
+            container.appendChild(notification);
+            
+            // Force repaint to trigger animation
+            notification.offsetHeight;
+            
+            // Auto-remove after duration
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.classList.add('fade-out');
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }, duration);
+            
+            // Return the notification element in case further manipulation is needed
+            return notification;
+        }
+    </script>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="animated-bg">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 36C27.9411 36 36 27.9411 36 18C36 8.05887 27.9411 0 18 0C8.05887 0 0 8.05887 0 18C0 27.9411 8.05887 36 18 36Z" fill="#a18cd1" fill-opacity="0.2"/>
+                <path d="M28.195 14.2577C27.8552 13.5514 27.262 13.0036 26.5344 12.7225C25.8068 12.4413 24.9999 12.4462 24.2755 12.7362C24.6153 13.4425 25.2085 13.9902 25.9361 14.2714C26.6637 14.5526 27.4706 14.5477 28.195 14.2577Z" fill="#a18cd1"/>
+                <path d="M28.195 21.7436C27.8552 22.4499 27.262 22.9977 26.5344 23.2788C25.8068 23.56 24.9999 23.5551 24.2755 23.2651C24.6153 22.5588 25.2085 22.0111 25.9361 21.7299C26.6637 21.4487 27.4706 21.4536 28.195 21.7436Z" fill="#a18cd1"/>
+                <path d="M18 27.4856C17.2937 27.1458 16.7459 26.5526 16.4648 25.825C16.1836 25.0974 16.1885 24.2905 16.4785 23.5661C17.1848 23.9059 17.7326 24.4991 18.0137 25.2267C18.2949 25.9543 18.29 26.7612 18 27.4856Z" fill="#a18cd1"/>
+                <path d="M19.0991 25.2267C19.3803 24.4991 19.9281 23.9059 20.6344 23.5661C20.9244 24.2905 20.9293 25.0974 20.6481 25.825C20.3669 26.5526 19.8192 27.1458 19.1129 27.4856C18.8229 26.7612 18.818 25.9543 19.0991 25.2267Z" fill="#a18cd1"/>
+                <path d="M11.7284 23.5661C11.0221 23.9059 10.4743 24.4991 10.1932 25.2267C9.91196 25.9543 9.91686 26.7612 10.2068 27.4856C10.9132 27.1458 11.4609 26.5526 11.7421 25.825C12.0233 25.0974 12.0184 24.2905 11.7284 23.5661Z" fill="#a18cd1"/>
+                <path d="M13.0863 7.61553C13.0863 7.61553 11.5455 9.15642 11.9682 12.3547C11.9682 12.3547 11.155 12.9501 10.2913 13.9863C9.42754 15.0225 9.72483 16.7576 9.72483 16.7576C9.72483 16.7576 8.26471 17.7432 7.7914 19.2335C7.31808 20.7239 7.91352 23.161 9.40406 23.7564C9.40406 23.7564 10.2913 25.5915 11.4732 25.8395C12.6551 26.0874 13.8371 25.4921 14.6502 23.7564C14.6502 23.7564 17.2334 24.7914 18.4153 24.7914C19.5466 24.7914 22.1804 23.7564 22.1804 23.7564C22.1804 23.7564 23.3118 25.7402 24.7474 25.8888C26.183 26.0374 27.2136 23.9043 27.2136 23.9043C27.2136 23.9043 28.7544 22.5214 28.9057 20.922C29.057 19.3226 28.2439 17.8323 28.2439 17.8323C28.2439 17.8323 28.9057 16.411 28.2439 14.7622C27.5821 13.1134 26.1465 12.4687 26.1465 12.4687C26.1465 12.4687 26.6198 9.9038 25.4379 8.06323C24.256 6.22266 20.9985 5.57795 18.9324 6.96985C18.9324 6.96985 17.0682 5.62861 15.2039 6.22266C13.3397 6.81671 13.0863 7.61553 13.0863 7.61553Z" fill="#fbc2eb" fill-opacity="0.2"/>
+                <path d="M12.6683 12.7299C11.9407 12.9977 11.3475 13.5455 11.0077 14.2518C10.2833 13.9618 9.47637 13.9667 8.74876 14.2479C8.02115 14.5291 7.42795 15.0768 7.08817 15.7831C7.81256 16.0731 8.61945 16.068 9.34707 15.787C10.0747 15.506 10.6679 14.9582 11.0077 14.2518C11.0077 14.2518 11.0077 14.2518 11.0077 14.2518C11.0077 14.2518 11.0077 14.2518 11.0077 14.2518C11.3475 13.5455 11.3426 12.7386 11.0526 12.0143C11.758 12.354 12.6683 12.4274 12.6683 12.7299Z" fill="#a18cd1"/>
+                <path d="M11.8319 21.7299C11.1043 21.4487 10.5111 20.9009 10.1713 20.1946C9.44694 20.4846 8.64005 20.4896 7.91244 20.2085C7.18482 19.9273 6.59163 19.3796 6.25184 18.6732C6.97623 18.3832 7.78312 18.3883 8.51074 18.6694C9.23836 18.9505 9.83155 19.4983 10.1713 20.2046C10.1713 20.2046 10.1713 20.2046 10.1713 20.2046C10.1713 20.2046 10.1713 20.2046 10.1713 20.2046C10.5111 20.9109 10.8011 21.7178 10.5111 22.4422C11.2175 22.1024 11.8319 21.4274 11.8319 21.7299Z" fill="#a18cd1"/>
+                <path d="M18 8.5117C17.2937 8.85148 16.7459 9.44468 16.4648 10.1723C16.1836 10.8999 16.1885 11.7068 16.4785 12.4312C17.1848 12.0914 17.7326 11.4982 18.0137 10.7706C18.2949 10.043 18.29 9.23609 18 8.5117Z" fill="#a18cd1"/>
+                <path d="M19.0991 10.7706C19.3803 11.4982 19.9281 12.0914 20.6344 12.4312C20.9244 11.7068 20.9293 10.8999 20.6481 10.1723C20.3669 9.44468 19.8192 8.85148 19.1129 8.5117C18.8229 9.23609 18.818 10.043 19.0991 10.7706Z" fill="#a18cd1"/>
+                <path d="M7.03555 18.0002C7.03555 18.0002 7.7245 15.9303 10.1965 14.6965C10.1965 14.6965 12.6685 13.4627 12.6685 9.90918C12.6685 9.90918 15.1405 8.92976 17.8638 10.3936C17.8638 10.3936 20.5871 8.92976 22.811 9.90918C22.811 9.90918 23.2483 10.3936 22.811 11.3731C22.811 11.3731 25.5343 11.373 25.5343 14.4514C25.5343 14.4514 27.3695 15.1859 28.2438 17.1435C28.2438 17.1435 28.9645 20.4627 27.3695 21.9266C27.3695 21.9266 25.7163 24.4577 24.5344 23.4782C24.5344 23.4782 22.1387 24.9421 19.7578 24.9421C19.7578 24.9421 19.0371 24.9421 18.0544 24.9421C17.0717 24.9421 12.9174 23.966 12.9174 23.966C12.9174 23.966 11.4699 25.92 9.81674 23.7233C9.81674 23.7233 8.36921 23.966 7.7245 21.4349C7.7245 21.4349 6.74178 20.2052 7.03555 18.0002Z" fill="#a18cd1" fill-opacity="0.2"/>
+            </svg>
+            <div class="logo-text">AuthXBD</div>
+        </div>
+        
+        <div id="register-form">
+            <div id="register-error" class="alert alert-error" style="display: none;"></div>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <span class="icon"><i class="bi bi-person"></i></span>
+                <input type="text" id="name" placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <span class="icon"><i class="bi bi-person-badge"></i></span>
+                <input type="text" id="username" placeholder="Choose a username">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <span class="icon"><i class="bi bi-envelope"></i></span>
+                <input type="email" id="email" placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <span class="icon"><i class="bi bi-lock"></i></span>
+                <input type="password" id="password" placeholder="Create a password">
+                <div class="validation-hint">Password must be at least 8 characters</div>
+                <div class="password-strength">
+                    <div class="password-strength-meter"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <span class="icon"><i class="bi bi-shield-lock"></i></span>
+                <input type="password" id="confirm-password" placeholder="Confirm your password">
+            </div>
+            
+            <button type="button" id="register-button">Create Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom context menu -->
+    <div class="custom-context-menu" id="customContextMenu">
+        <div class="custom-context-menu-item" id="refresh">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg>
+            Refresh
+        </div>
+        <div class="custom-context-menu-item" id="back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Back
+        </div>
+        <div class="custom-context-menu-item" id="forward">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            Forward
+        </div>
+        <div class="custom-context-menu-separator"></div>
+        <div class="custom-context-menu-item" id="print">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5z"/>
+            </svg>
+            Print
+        </div>
+        <div class="custom-context-menu-item" id="save">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            Save As
+        </div>
+    </div>
+
+    <script>
+        // Disable default context menu and implement custom one
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            
+            const contextMenu = document.getElementById('customContextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.pageX}px`;
+            contextMenu.style.top = `${e.pageY}px`;
+            
+            // Adjust position if menu would go off screen
+            const menuRect = contextMenu.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            if (e.pageX + menuRect.width > windowWidth) {
+                contextMenu.style.left = `${windowWidth - menuRect.width - 10}px`;
+            }
+            
+            if (e.pageY + menuRect.height > windowHeight) {
+                contextMenu.style.top = `${windowHeight - menuRect.height - 10}px`;
+            }
+        });
+        
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', function() {
+            document.getElementById('customContextMenu').style.display = 'none';
+        });
+        
+        // Add functionality to context menu items
+        document.getElementById('refresh').addEventListener('click', function() {
+            location.reload();
+        });
+        
+        document.getElementById('back').addEventListener('click', function() {
+            history.back();
+        });
+        
+        document.getElementById('forward').addEventListener('click', function() {
+            history.forward();
+        });
+        
+        document.getElementById('print').addEventListener('click', function() {
+            window.print();
+        });
+        
+        document.getElementById('save').addEventListener('click', function() {
+            // This is limited in what it can do due to browser security restrictions
+            // but we'll keep it as a menu item for completeness
+            alert('Save functionality is limited by browser security.');
+        });
+        
+        // Additional security measures to prevent some inspection features
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (developer tools)
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67))
+            ) {
+                e.preventDefault();
+            }
+            
+            // Prevent Ctrl+U (view source)
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+            }
+        });
+        
+        // Existing registration JavaScript code...
+    </script>
+</body>
+</html> 
